@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
-from IPython.display import Markdown, display, update_display
+from rich import print as rprint
+from rich.markdown import Markdown
 from openai import OpenAI
 import time
 
@@ -44,7 +45,14 @@ for chunk in stream:
     content = chunk.choices[0].delta.content or ''
     response += content
     print(content, end='', flush=True)
+    """
+    print(content) - Displays the current chunk of text received from the stream
+    end='' - Prevents adding a newline character after each chunk (the default behavior of print is to add a newline)
+    flush=True - Forces Python to output the text immediately instead of buffering it
+    Without end='', each chunk would appear on a new line, creating a choppy effect. Without flush=True, Python might hold onto the output in its buffer and only display it periodically, which would make the text appear in sudden bursts rather than a smooth stream.
+    This technique is commonly used when working with streaming APIs (like those from OpenAI, Anthropic, etc.) to create a more natural, real-time display of incoming text in a terminal or console application.
+    """
     time.sleep(0.01)  # Small delay to make streaming more visible
 
-print("\n\nFull response:\n")
+#print("\n\nFull response:\n")
 print(response)
